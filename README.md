@@ -10,7 +10,7 @@ This implementation is based off of [A Neural Algorithm of Artistic Style](https
 
 Use `generate.py` to style an image. Example usage:
 
-```python
+```
 python generate.py \
 examples/bases/chicago.jpg \
 examples/styles/umbrella_girl.jpg \
