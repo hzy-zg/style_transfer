@@ -21,17 +21,17 @@ class Neural_Styler(object):
 	  Alexander S. Ecker and Matthias Bethge.
 	"""
 	def __init__(self, 
-				 base_img_path,
-				 style_img_path,
-				 output_img_path,
-				 output_width,
-				 convnet, 
-				 content_weight, 
-				 style_weight, 
-				 tv_weight,
-				 content_layer,
-				 style_layers,
-				 iterations):
+		     base_img_path,
+		     style_img_path,
+		     output_img_path,
+		     output_width,
+		     convnet, 
+		     content_weight, 
+		     style_weight, 
+		     tv_weight,
+		     content_layer,
+		     style_layers,
+		     iterations):
 		"""
 		Initialize and store parameters of the neural styler. Initialize the
 		desired convnet and compute the 3 losses and gradients with respect to the
@@ -95,9 +95,9 @@ class Neural_Styler(object):
 
 		# combine the 3 images into a single Keras tensor
 		self.input_img = K.concatenate([self.content_img, 
-										self.style_img, 
-										self.output_img], 
-										axis=0)
+						self.style_img, 
+						self.output_img], 
+						axis=0)
 
 		self.dims = K.int_shape(self.input_img)
 		self.img_nrows = self.dims[1]
@@ -120,12 +120,12 @@ class Neural_Styler(object):
 
 		if self.convnet == 'vgg16':
 			self.model = vgg16.VGG16(input_tensor=self.input_img, 
-									 weights='imagenet', 
-									 include_top=False)
+						 weights='imagenet', 
+						 include_top=False)
 		else:
 			self.model = vgg19.VGG19(input_tensor=self.input_img, 
-									 weights='imagenet', 
-									 include_top=False)
+						 weights='imagenet', 
+						 include_top=False)
 
 		print('\tComputing losses...')
 		# get the symbolic outputs of each "key" layer (we gave them unique names).
@@ -140,8 +140,8 @@ class Neural_Styler(object):
 
 		# calculate the feature reconstruction loss
 		content_loss = self.content_weight * \
-					   feature_reconstruction_loss(base_image_features, 
-					   							   combination_features)
+		   		feature_reconstruction_loss(base_image_features, 
+							    combination_features)
 		
 		# for each style layer compute style loss
 		# total style loss is then weighted sum of those losses
@@ -155,16 +155,16 @@ class Neural_Styler(object):
 			style_image_features = style_features[1, :, :, :]
 			output_style_features = style_features[2, :, :, :]
 			temp_style_loss += weight * \
-							  style_reconstruction_loss(style_image_features, 
-		     						    	    	 	output_style_features,
- 						   							    self.img_nrows, 
-					   							   		self.img_ncols)
+					   style_reconstruction_loss(style_image_features, 
+								     output_style_features,
+								     self.img_nrows, 
+								     self.img_ncols)
 		style_loss = self.style_weight * temp_style_loss
 
 		# compute total variational loss
 		tv_loss = self.tv_weight * total_variation_loss(self.output_img, 
-														self.img_nrows, 
-														self.img_ncols)
+								self.img_nrows, 
+								self.img_ncols)
 
 		# composite loss
 		total_loss = content_loss + style_loss + tv_loss
