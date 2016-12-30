@@ -11,31 +11,31 @@ TV_WEIGHT = 1.0
 ITERATIONS = 100
 CONTENT_LAYER = 'block4_conv2'
 STYLE_LAYERS = ['block1_conv1',
-				'block2_conv1',
-				'block3_conv1', 
-				'block4_conv1', 
-				'block5_conv1']
+		'block2_conv1',
+		'block3_conv1', 
+		'block4_conv1', 
+		'block5_conv1']
 
 def build_parser():
 	description = 'Neural Style Implementation in Keras.'
 	parser = ArgumentParser(description=description)
 	parser.add_argument('base_img_path', metavar='base', type=str,
-						help='path to base image.')
+			    help='path to base image.')
 	parser.add_argument('style_img_path', metavar='style', type=str,
-						help='path to style image.')
+			    help='path to style image.')
 	parser.add_argument('output_img_path', metavar='output', type=str,
-						help='path to output image.')
+			    help='path to output image.')
 	parser.add_argument('--iters', type=int, default=ITERATIONS,
-						metavar='iterations', help='Number of iterations.')
+			    metavar='iterations', help='Number of iterations.')
 	parser.add_argument('--content_weight', type=float, default=CONTENT_WEIGHT,
-						help='Weight for content feature loss')
+			    help='Weight for content feature loss')
 	parser.add_argument('--style_weight', type=float, default=STYLE_WEIGHT,
-						help='Weight for style feature loss')
+			    help='Weight for style feature loss')
 	parser.add_argument('--tv_weight', type=float, default=TV_WEIGHT,
-						help='Weight for total variation loss')
+			    help='Weight for total variation loss')
 	parser.add_argument('--width', type=int, help='output image width')
 	parser.add_argument('--convnet', type=str, default=CONVNET,
-						help='VGG model (16 or 19)')
+			    help='VGG model (16 or 19)')
 	return parser
 
 def main():
@@ -65,16 +65,16 @@ def main():
 
 	# instantiate neural style object
 	neural_styler = Neural_Styler(base_img_path,
-								  style_img_path,
-								  output_img_path,
-								  output_width,
-								  convnet, 
-								  content_weight, 
-								  style_weight, 
-								  total_variation_weight,
-								  CONTENT_LAYER,
-								  STYLE_LAYERS,
-								  iterations)
+				      style_img_path,
+				      output_img_path,
+				      output_width,
+				      convnet, 
+				      content_weight, 
+				      style_weight, 
+				      total_variation_weight,
+				      CONTENT_LAYER,
+				      STYLE_LAYERS,
+				      iterations)
 
 	# create style image
 	neural_styler.style()
