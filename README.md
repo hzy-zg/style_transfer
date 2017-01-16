@@ -3,7 +3,10 @@
 Add the style of a painting to any base image of your choosing!
 
 <p align="center">
- <img src="./examples/styles/scream.jpg" width="400px"> <img src="./examples/bases/chicago.jpg" width="300px">
+ <img src="./examples/styles/scream.jpg" width="400px"> 
+</p>
+ <p align="center">
+ <img src="./examples/bases/chicago.jpg" width="300px">
  <img src="./examples/results/my_result_at_iteration_0.png" width="300px"> <img src="./examples/results/my_result_at_iteration_5.png" width="300px"> 
  <img src="./examples/results/my_result_at_iteration_499.png" width="300px">
 </p>
