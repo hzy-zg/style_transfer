@@ -184,8 +184,8 @@ class Neural_Styler(object):
 
 	def style(self):
 		"""
-		Run L-BFGS over the pixels of the generated image so as to 
-		minimize the neural style loss.
+		Minimize the newly defined loss function using L-BFGS. This 
+		is done on a white noise initialized image.
 		"""
 		print('\nDone initializing... Ready to style!')
 
