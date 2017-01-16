@@ -24,7 +24,7 @@ Styling an image is done through `generate.py` as follows:
 python generate.py examples/bases/chicago.jpg examples/styles/umbrella_girl.jpg examples/results/my_result
 ```
 
-You can see a detailed documentation along with the default parameters [here](https://github.com/kevinzakka/style_transfer/blob/master/docs.md).
+For a more detailed documentation along with the default parameters click [here](https://github.com/kevinzakka/style_transfer/blob/master/docs.md).
 
 ## Requirements
 
@@ -35,3 +35,4 @@ You can see a detailed documentation along with the default parameters [here](ht
 
 - This implementation uses some code from Francois Chollet's [Neural Style Transfer](https://github.com/fchollet/keras/blob/master/examples/neural_style_transfer.py).
 - The hierarchy also borrows from Giuseppe's gist which you can view [here](https://gist.github.com/giuseppebonaccorso/ef09a03424c9a49ae9b087bd364a5813).
+- Documentation has been borrowed by Logan Engstrom's [Fast Style Transfer](https://github.com/lengstrom/fast-style-transfer)
