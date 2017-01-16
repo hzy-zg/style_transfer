@@ -17,7 +17,7 @@ This is a Keras implementation of [A Neural Algorithm of Artistic Style](https:/
 <img src = 'exxamples/results/chicago_la_muse.jpg' height = '200px'>
 </div>
 
-Neural Styler lets you create artistic images by combining a base picture with the style of another. The images above show multiple iterations of a photo of the [Chicago skyline](http://www.nursing.uic.edu/sites/default/files/chicagoskyline_2.jpg) that has been combined with Edvard Munch's [The Scream](https://en.wikipedia.org/wiki/The_Scream). 
+Neural Styler lets you create artistic images by combining a base picture with the style of another. For example, the images above show multiple iterations of the [Chicago skyline](http://www.nursing.uic.edu/sites/default/files/chicagoskyline_2.jpg) combined with Edvard Munch's [The Scream](https://en.wikipedia.org/wiki/The_Scream) and Leonid Afremov's [Rain Princess](https://afremov.com/RAIN-PRINCESS-Palette-knife-Oil-Painting-on-Canvas-by-Leonid-Afremov-Size-30-x30.html) respectively.
 
 ## Implementation Details
 
