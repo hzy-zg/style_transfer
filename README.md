@@ -21,16 +21,14 @@ Neural Styler lets you create artistic images by combining a base picture with t
 
 ## Implementation Details
 
+`Neural_Styler` is the class abstraction which defines the loss and optimization.
+
 ## Documentation
 
 Use `generate.py` to style an image. Example usage:
 
-```
-python generate.py \
-examples/bases/chicago.jpg \
-examples/styles/umbrella_girl.jpg \
-examples/results/my_result \
---width=400
+```python
+python generate.py examples/bases/chicago.jpg examples/styles/umbrella_girl.jpg examples/results/my_result
 ```
 
 ## Requirements
