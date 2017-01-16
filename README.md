@@ -35,4 +35,4 @@ For a more detailed documentation along with the default parameters click [here]
 
 - This implementation uses some code from Francois Chollet's [Neural Style Transfer](https://github.com/fchollet/keras/blob/master/examples/neural_style_transfer.py).
 - The hierarchy also borrows from Giuseppe's gist which you can view [here](https://gist.github.com/giuseppebonaccorso/ef09a03424c9a49ae9b087bd364a5813).
-- Documentation has been borrowed by Logan Engstrom's [Fast Style Transfer](https://github.com/lengstrom/fast-style-transfer)
+- Documentation has also borrowed from Logan Engstrom's [Fast Style Transfer](https://github.com/lengstrom/fast-style-transfer)
