@@ -16,33 +16,13 @@ Neural Styler lets you create artistic images by combining a base picture with t
 
 ## API
 
-`Neural_Styler` is the class abstraction which defines the loss and optimization.
-
-## API
-
 Styling an image is done through `generate.py` as follows:
 
 ```python
 python generate.py examples/bases/chicago.jpg examples/styles/umbrella_girl.jpg examples/results/my_result
 ```
 
-`generate.py` is actually a command line parser that makes use of the `Neural_Styler()` class abstraction.
-
-**Parameters**
-
-- `input_img`: tensor containing: content_img, style_img and output_img.
-- `convnet`: (string), defines which VGG to use: vgg16 or vgg19.
-- `style_layers`: list containing name of layers to use for style
-  reconstruction. Defined in Gatys et. al but can be changed.
-- `content_layer`: string containing name of layer to use for content
-  reconstruction. Also defined in Gatys et. al.
-- `content_weight`: weight for the content loss.
-- `style_weight`: weight for the style loss.
-- `tv_weight`: weight for the total variation loss.
-- `iterations`: iterations for optimization algorithm
-- `output_img_path`: path to output image.
-
-You can see the default paramaters and a more detailed documentation [here]().
+You can see a detailed documentation along with the default parameters [here](https://github.com/kevinzakka/style_transfer/blob/master/docs.md).
 
 ## Requirements
 
