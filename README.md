@@ -29,7 +29,8 @@ For a more detailed documentation along with the default parameters click [here]
 ## Requirements
 
 - Keras (and associated requirements)
-- Python 2.7
+- PIL 
+- Python 2 and 3
 
 ## Attribution
 
