@@ -28,8 +28,11 @@ For a more detailed documentation along with the default parameters click [here]
 
 ## Requirements
 
-- Keras (and associated requirements)
-- PIL 
+- keras (and associated dependencies)
+  - numpy, scipy
+  - pyyaml
+  - HDF5 and h5py
+- pillow 
 - Python 2 and 3
 
 ## Attribution
