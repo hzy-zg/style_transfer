@@ -5,6 +5,7 @@ import time
 import numpy as np
 from scipy.misc import imsave
 from keras import backend as K
+from keras.layers import Lambda
 from scipy.optimize import fmin_l_bfgs_b
 from keras.applications import vgg16, vgg19
 from keras.preprocessing.image import load_img
@@ -21,17 +22,17 @@ class Neural_Styler(object):
 	  Alexander S. Ecker and Matthias Bethge.
 	"""
 	def __init__(self, 
-		     base_img_path,
-		     style_img_path,
-		     output_img_path,
-		     output_width,
-		     convnet, 
-		     content_weight, 
-		     style_weight, 
-		     tv_weight,
-		     content_layer,
-		     style_layers,
-		     iterations):
+				 base_img_path,
+				 style_img_path,
+				 output_img_path,
+				 output_width,
+				 convnet, 
+				 content_weight, 
+				 style_weight, 
+				 tv_weight,
+				 content_layer,
+				 style_layers,
+				 iterations):
 		"""
 		Initialize and store parameters of the neural styler. Initialize the
 		desired convnet and compute the 3 losses and gradients with respect to the
@@ -62,8 +63,8 @@ class Neural_Styler(object):
 		    since nrows=height and ncols=width.
 
 		[3] L_BFGS requires that loss and grad be two functions so we create
-		    a keras function that computes the grad and loss and return each
-		    using a class method.
+		    a keras function that computes the gradients and loss and return 
+		    each separately using two different class methods.
 		"""
 		print('\nInitializing Neural Style model...')
 
@@ -78,15 +79,28 @@ class Neural_Styler(object):
 		width, height = load_img(self.base_img_path).size
 		new_dims = (height, width)
 
+		# store shapes for future use
+		self.img_nrows = height
+		self.img_ncols = width
+
 		if self.width is not None:
 			# calculate new height
 			num_rows = int(np.floor(float(height * self.width / width)))
 			new_dims = (num_rows, self.width)
 
-		# resize content, style and output images to this desired shape
+			# store shapes for future use
+			self.img_nrows = num_rows
+			self.img_ncols = self.width
+
+		# resize content and style images to this desired shape
 		self.content_img = K.variable(preprocess_image(self.base_img_path, new_dims))
 		self.style_img = K.variable(preprocess_image(self.style_img_path, new_dims))
-		self.output_img = K.placeholder((1, new_dims[0], new_dims[1], 3))
+
+		# and also create output placeholder with desired shape
+		if K.image_dim_ordering() == 'th':
+			self.output_img = K.placeholder((1, 3, new_dims[0], new_dims[1]))
+		else:
+			self.output_img = K.placeholder((1, new_dims[0], new_dims[1], 3))
 
 		# sanity check on dimensions
 		print("\tSize of content image is: {}".format(K.int_shape(self.content_img)))
@@ -95,13 +109,8 @@ class Neural_Styler(object):
 
 		# combine the 3 images into a single Keras tensor
 		self.input_img = K.concatenate([self.content_img, 
-						self.style_img, 
-						self.output_img], 
-						axis=0)
-
-		self.dims = K.int_shape(self.input_img)
-		self.img_nrows = self.dims[1]
-		self.img_ncols = self.dims[2]
+										self.style_img, 
+										self.output_img], axis=0)
 
 		self.convnet = convnet
 		self.iterations = iterations
@@ -120,12 +129,12 @@ class Neural_Styler(object):
 
 		if self.convnet == 'vgg16':
 			self.model = vgg16.VGG16(input_tensor=self.input_img, 
-						 weights='imagenet', 
-						 include_top=False)
+									 weights='imagenet', 
+									 include_top=False)
 		else:
 			self.model = vgg19.VGG19(input_tensor=self.input_img, 
-						 weights='imagenet', 
-						 include_top=False)
+									 weights='imagenet', 
+									 include_top=False)
 
 		print('\tComputing losses...')
 		# get the symbolic outputs of each "key" layer (we gave them unique names).
@@ -140,8 +149,8 @@ class Neural_Styler(object):
 
 		# calculate the feature reconstruction loss
 		content_loss = self.content_weight * \
-		   		feature_reconstruction_loss(base_image_features, 
-							    combination_features)
+					   feature_reconstruction_loss(base_image_features, 
+					   							   combination_features)
 		
 		# for each style layer compute style loss
 		# total style loss is then weighted sum of those losses
@@ -155,16 +164,16 @@ class Neural_Styler(object):
 			style_image_features = style_features[1, :, :, :]
 			output_style_features = style_features[2, :, :, :]
 			temp_style_loss += weight * \
-					   style_reconstruction_loss(style_image_features, 
-								     output_style_features,
-								     self.img_nrows, 
-								     self.img_ncols)
+							  style_reconstruction_loss(style_image_features, 
+		     						    	    	 	output_style_features,
+ 						   							    self.img_nrows, 
+					   							   		self.img_ncols)
 		style_loss = self.style_weight * temp_style_loss
 
 		# compute total variational loss
 		tv_loss = self.tv_weight * total_variation_loss(self.output_img, 
-								self.img_nrows, 
-								self.img_ncols)
+														self.img_nrows, 
+														self.img_ncols)
 
 		# composite loss
 		total_loss = content_loss + style_loss + tv_loss
@@ -184,13 +193,16 @@ class Neural_Styler(object):
 
 	def style(self):
 		"""
-		Minimize the newly defined loss function using L-BFGS. This 
-		is done on a white noise initialized image.
+		Run L-BFGS over the pixels of the generated image so as to 
+		minimize the neural style loss.
 		"""
 		print('\nDone initializing... Ready to style!')
 
 		# initialize white noise image
-		x = np.random.uniform(0, 255, (1, self.img_nrows, self.img_ncols, 3)) - 128.
+		if K.image_dim_ordering() == 'th':
+			x = np.random.uniform(0, 255, (1, 3, self.img_nrows, self.img_ncols)) - 128.
+		else:
+			x = np.random.uniform(0, 255, (1, self.img_nrows, self.img_ncols, 3)) - 128.
 
 		for i in range(self.iterations):
 			print('\n\tIteration: {}'.format(i+1))
@@ -200,23 +212,34 @@ class Neural_Styler(object):
 
 			# save current generated image
 			img = deprocess_image(x.copy(), self.img_nrows, self.img_ncols)
-			fname = self.output_img_path + '_at_iteration_%d.png' % i
+			fname = self.output_img_path + '_at_iteration_%d.png' % (i+1)
 			imsave(fname, img)
 
 			tic = time.time()
 
 			print('\t\tImage saved as', fname)
-			print('\t\tLoss: {:.2E}, Time: {} seconds'.format(min_val, tic-toc))
+			print('\t\tLoss: {:.2e}, Time: {} seconds'.format(float(min_val), float(tic-toc)))
 
 	def loss(self, x):
-		x = x.reshape((1, self.img_nrows, self.img_ncols, 3))
+		# reshape
+		if K.image_dim_ordering() == 'th':
+			x = x.reshape((1, 3, self.img_nrows, self.img_ncols))
+		else:
+			x = x.reshape((1, self.img_nrows, self.img_ncols, 3))
+
 		outs = self.loss_and_grads([x])
 		loss_value = outs[0]
 		return loss_value
 
 	def grads(self, x):
-		x = x.reshape((1, self.img_nrows, self.img_ncols, 3))
+		# reshape
+		if K.image_dim_ordering() == 'th':
+			x = x.reshape((1, 3, self.img_nrows, self.img_ncols))
+		else:
+			x = x.reshape((1, self.img_nrows, self.img_ncols, 3))
+
 		outs = self.loss_and_grads([x])
+
 		if len(outs[1:]) == 1:
 			grad_values = outs[1].flatten().astype('float64')
 		else:

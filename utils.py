@@ -1,4 +1,5 @@
 import numpy as np
+from keras import backend as K
 from keras.applications import vgg16
 from keras.preprocessing.image import load_img, img_to_array
 
@@ -20,9 +21,13 @@ def preprocess_image(image_path, desired_dims):
 	img = vgg16.preprocess_input(img)
 	return img
 
-# util function to convert a tensor into a valid image
-def deprocess_image(x, nrows, ncols):
-	x = x.reshape((nrows, ncols, 3))
+# util function to convert a tensor into a valid image	
+def deprocess_image(x, img_nrows, img_ncols):
+	if K.image_dim_ordering() == 'th':
+		x = x.reshape((3, img_nrows, img_ncols))
+		x = x.transpose((1, 2, 0))
+	else:
+		x = x.reshape((img_nrows, img_ncols, 3))
 	# Remove zero-center by mean pixel
 	x[:, :, 0] += 103.939
 	x[:, :, 1] += 116.779

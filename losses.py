@@ -22,7 +22,11 @@ def gram_matrix(x):
 	Note that this can be computed efficiently if x is reshaped
 	as a tensor of shape (C x H*W).
 	"""
-	features = K.batch_flatten(K.permute_dimensions(x, (2, 0, 1)))
+	# assert K.ndim(x) == 3
+	if K.image_dim_ordering() == 'th':
+		features = K.batch_flatten(x)
+	else:
+		features = K.batch_flatten(K.permute_dimensions(x, (2, 0, 1)))
 	return K.dot(features, K.transpose(features))
 
 def style_reconstruction_loss(base, output, img_nrows, img_ncols):
@@ -44,6 +48,11 @@ def total_variation_loss(x, img_nrows, img_ncols):
 	in the output image.
 	"""
 	H, W = img_nrows, img_ncols
-	a = K.square(x[:, :H-1, :W-1, :] - x[:, 1:, :W-1, :])
-	b = K.square(x[:, :H-1, :W-1, :] - x[:, :H-1, 1:, :])
+	if K.image_dim_ordering() == 'th':
+		a = K.square(x[:, :, :H-1, :W-1] - x[:, :, 1:, :W-1])
+		b = K.square(x[:, :, :H-1, :W-1] - x[:, :, :H-1, 1:])
+	else:	
+		a = K.square(x[:, :H-1, :W-1, :] - x[:, 1:, :W-1, :])
+		b = K.square(x[:, :H-1, :W-1, :] - x[:, :H-1, 1:, :])
+
 	return K.sum(K.pow(a + b, 1.25))
