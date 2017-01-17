@@ -21,17 +21,17 @@ class Neural_Styler(object):
 	  Alexander S. Ecker and Matthias Bethge.
 	"""
 	def __init__(self, 
-				 base_img_path,
-				 style_img_path,
-				 output_img_path,
-				 output_width,
-				 convnet, 
-				 content_weight, 
-				 style_weight, 
-				 tv_weight,
-				 content_layer,
-				 style_layers,
-				 iterations):
+		     base_img_path,
+		     style_img_path,
+		     output_img_path,
+		     output_width,
+		     convnet, 
+		     content_weight, 
+		     style_weight, 
+		     tv_weight,
+		     content_layer,
+		     style_layers,
+		     iterations):
 		"""
 		Initialize and store parameters of the neural styler. Initialize the
 		desired convnet and compute the 3 losses and gradients with respect to the
