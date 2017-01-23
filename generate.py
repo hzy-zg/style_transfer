@@ -68,16 +68,16 @@ def main():
 
 	# instantiate neural style object
 	neural_styler = Neural_Styler(base_img_path,
-								  style_img_path,
-								  output_img_path,
-								  output_width,
-								  convnet, 
-								  content_weight, 
-								  style_weight, 
-								  total_variation_weight,
-								  CONTENT_LAYER,
-								  STYLE_LAYERS,
-								  iterations)
+				      style_img_path,
+				      output_img_path,
+				      output_width,
+				      convnet, 
+				      content_weight, 
+				      style_weight, 
+				      total_variation_weight,
+				      CONTENT_LAYER,
+				      STYLE_LAYERS,
+				      iterations)
 
 	# create style image
 	neural_styler.style()
